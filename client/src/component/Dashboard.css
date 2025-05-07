@@ -1,0 +1,118 @@
+/* Scope all styles under .dashboard */
+.dashboard .pet-type-item {
+    border: 2px solid transparent;
+    background-color: transparent;
+    transition: all 0.3s ease-in-out;
+    border-radius: 10px;
+    color: #212529;
+}
+.pet-type-item.selected {
+    background-color: #5dade2;
+    border-color: #3498db;
+    color: #ffffff;
+}
+
+.category-card.selected {
+    border: 2px solid #0d6efd;
+    background-color: #5dade2;
+}
+
+.ad-card {
+    background-color: #e6f0fa; /* light blue background */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  
+  .ad-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ad-image {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+  }
+
+.dashboard .pet-type-item:hover {
+    background-color: rgba(93, 173, 226, 0.1); /* light blue hint on hover */
+    border-color: #5dade2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard .pet-type-item.selected {
+    background-color: #5dade2;
+    border-color: #3498db;
+    color: #ffffff;
+}
+
+.dashboard .pet-type-item.selected .fw-semibold {
+    color: #ffffff;
+}
+
+.dashboard .btn-outline-primary {
+    border-width: 2px;
+    color:green;
+    border-color: #5DADE2;
+    background-color: #ffffff;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+    border-radius: 8px;
+    padding: 8px 16px;
+    box-shadow: inset 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.dashboard .btn-outline-primary:hover {
+    background-color: #eaf4fb;
+    color: #3498db;
+    border-color: #3498db;
+    box-shadow: 0 2px 6px rgba(93, 173, 226, 0.3);
+}
+
+.dashboard .btn-outline-primary.active {
+    background-color: #5DADE2;
+    border-color: #5DADE2;
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(93, 173, 226, 0.4);
+}
+
+.dashboard .btn,
+.dashboard .btn-outline-primary {
+    color: black !important;
+    background-color: transparent;
+    color: #007bff;
+    border: 1px solid  black ;
+}
+
+.dashboard  .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+.dashboard .btn.active {
+    color: white !important;
+    background-color: #007bff !important;
+}
+
+/* Scoped input and select styles */
+.dashboard input[type="text"],
+.dashboard textarea {
+    color: black !important;
+    border: 1px solid #ccc;
+}
+
+.dashboard .form-select {
+    color: black !important;
+}
+
+.dashboard .form-select:focus {
+    background-color: #e6f7ff;
+    border-color: #3399ff;
+    color: black !important;
+}
+
+.dashboard .form-select option {
+    color: black !important;
+}

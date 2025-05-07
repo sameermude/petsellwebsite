@@ -1,0 +1,397 @@
+:root {
+  --primary: #0d6efd;
+  --secondary: #6c757d;
+  --info-bg: #e9f5ff;
+  --accent: #f0f4f8;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --danger: #dc3545;
+  --success: #198754;
+  --skyblue: #87ceeb;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden; /* Hide horizontal overflow */
+  overflow-y: auto;   /* Only show vertical scroll when needed */
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background-color: var(--accent);
+  color: var(--dark);
+  overflow-y: auto;         /* Ensure scroll only when content exceeds screen */
+}
+
+
+/* Admin Layout */
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--skyblue);
+}
+
+.admin-content {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  min-height: 0; /* important */
+  overflow: hidden; /* prevent container overflow */
+}
+
+.left-panel {
+  width: 280px;
+  background-color: var(--info-bg);
+  padding: 1rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px); /* Adjust if you have a header */
+}
+
+.right-panel {
+  flex: 1;
+  padding: 0 1.5rem 1.5rem; /* remove top padding */
+  overflow-y: auto;
+  min-height: auto;
+  background-color: transparent;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+}
+
+.separator1 {
+  width: 2px;
+  background-color: #dee2e6;
+}
+
+/* Aboutus.css or App.css */
+
+.table-bordered th,
+.table-bordered td {
+    border-right: 1px solid #e4e4e4; /* Light vertical lines */
+}
+
+.table-bordered td:last-child,
+.table-bordered th:last-child {
+    border-right: none;
+}
+
+.custom-edit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.tree-container {
+  font-family: 'Arial', sans-serif;
+  font-size: 1rem;
+  color: #495057;
+  margin-left: 10px;
+}
+
+.tree-node {
+  cursor: pointer;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  padding: 8px 15px;
+  background-color: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary {
+  background-color: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+
+.tree-node:hover {
+  background-color: #e9ecef;
+}
+
+.tree-node.selected {
+  background-color: #cce5ff;
+  border-left: 4px solid #007bff;
+  font-weight: 600;
+}
+
+.input-group .btn {
+  height: 100%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+
+/* Styling for Root Node */
+.tree-node.root {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.tree-children {
+  margin-left: 20px;
+  padding-left: 15px;
+  border-left: 2px solid #ced4da;
+}
+
+.custom-edit-btn:hover {
+    background-color: #45a049;
+}
+
+.custom-delete-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+}
+
+.custom-delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+
+
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.table td button {
+  min-width: 70px;
+}
+
+
+
+/* Tree Styles */
+.tree {
+  flex: 0 0 75%;
+  overflow-y: auto;
+  max-height: 75%;
+}
+
+.tree-node {
+  padding: 10px 15px;
+  margin-bottom: 5px;
+  background-color: var(--skyblue);
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.tree-node:hover {
+  background-color: var(--primary);
+  color: white;
+  cursor: pointer;
+}
+
+.tree-node.selected {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Address Box */
+.address-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 1rem;
+}
+
+.address-box {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 15px;
+  width: 220px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+}
+
+.address-box:hover {
+  transform: scale(1.02);
+}
+
+.address-box.edge-circular {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--primary);
+}
+
+/* Buttons */
+.edit-button,
+.delete-button,
+.custom-button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  margin: 5px 5px 0 0;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.aboutus-wrapper {
+  background-color: #e0f7ff; /* a very light blue for contrast */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+}
+
+.delete-button {
+  background-color: var(--danger);
+}
+
+.edit-button:hover,
+.delete-button:hover,
+.custom-button:hover {
+  opacity: 0.9;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Forms and Labels */
+label {
+  color: var(--dark);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+/* Additional styles for the modal if needed */
+/* Center the modal and apply sky blue background */
+.modal-content {
+  border-radius: 8px;
+  background-color: #87CEEB; /* Sky blue background */
+  padding: 20px;
+}
+
+/* Ensure the modal stays centered on the screen */
+.modal-dialog {
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Ensure modal takes full height of screen */
+  margin: 0; /* Remove any default margins */
+}
+
+/* Optional: Adjust modal body styling */
+.modal-body {
+  background-color: #87CEEB; /* Sky blue background */
+  font-size: 16px;
+  color: #333;
+}
+
+/* Optional: Style the close button to make it more visible */
+.modal-header .btn-close {
+  background-color: #87CEEB; /* Sky blue background */
+  color: #fff;
+  opacity: 1;
+}
+
+.modal-footer .btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+/* Optional: Style the modal title */
+.modal-header .modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Utilities */
+.row-spacing {
+  margin-bottom: 10px;
+}
+
+.top-banner {
+  background-color: #5dade2; /* darker sky blue */
+  padding: 10px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Hide HRs */
+hr {
+  display: none;
+}
+
+/* App-level layout (Home/Admin links) */
+.app-container {
+  background-color: var(--skyblue); /* same as admin-container */
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: #5dade2; /* Dark sky blue for header */
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.app-title {
+  color: white;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.app-nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.nav-link:hover {
+  color: var(--dark);
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 0;
+}
+
+.app-content {
+  padding: 20px;
+}
