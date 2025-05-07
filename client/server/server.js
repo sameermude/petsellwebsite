@@ -18,6 +18,7 @@ const User = require('./schemas/commonSchemas').User;
 const app = express();
 const PORT = process.env.PORT || 5000;
 const fs = require('fs');
+require('dotenv').config();
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -58,6 +59,7 @@ db.once('open', () => {
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
+console.log(accountSid)
 const client = twilio(accountSid, authToken);
 
 // In-memory store for OTP (you can use a database or Redis for production)
