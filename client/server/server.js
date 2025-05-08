@@ -257,9 +257,6 @@ app.post('/api/ads', upload.array('images', 5), async (req, res) => {
 
 app.put('/api/ads1/:id', upload.array('images', 5), async (req, res) => {
   try {
-    console.log('Entered here');
-    console.log(req.params.id);
-
     const {
       companyId,
       categoryid,
@@ -270,13 +267,20 @@ app.put('/api/ads1/:id', upload.array('images', 5), async (req, res) => {
       userId,
       images: existingImages, // images passed in the body (could be URLs)
     } = req.body;
-    console.log('Entered here1');
     // Map newly uploaded images to URLs
     const uploadedImageUrls = req.files.map(file => `/uploads/${file.filename}`);
     console.log('existingImages' + existingImages)
     console.log('uploadedImageUrls' + uploadedImageUrls)
-    const imageArray1 = typeof existingImages === 'string' ? existingImages.split(',') : (Array.isArray(existingImages) ? existingImages : []);
-    const uploadedImageUrls1 = typeof existingImages === 'string' ? existingImages.split(',') : (Array.isArray(uploadedImageUrls) ? uploadedImageUrls : []);
+    /*     const imageArray1 = typeof existingImages === 'string' ? existingImages.split(',') : (Array.isArray(existingImages) ? existingImages : []);
+        const uploadedImageUrls1 = typeof existingImages === 'string' ? existingImages.split(',') : (Array.isArray(uploadedImageUrls) ? uploadedImageUrls : []); */
+    const imageArray1 = typeof existingImages === 'string'
+      ? existingImages.split(',')
+      : (Array.isArray(existingImages) ? existingImages : []);
+
+    const uploadedImageUrls1 = typeof uploadedImageUrls === 'string'
+      ? uploadedImageUrls.split(',')
+      : (Array.isArray(uploadedImageUrls) ? uploadedImageUrls : []);
+
     // If there are existing images (URLs), keep them and add to the list
     const allImages = [
       ...(imageArray1 || []),  // Include existing images
