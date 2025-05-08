@@ -59,7 +59,6 @@ db.once('open', () => {
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-console.log(accountSid)
 const client = twilio(accountSid, authToken);
 
 // In-memory store for OTP (you can use a database or Redis for production)
@@ -111,7 +110,7 @@ app.post('/api/send-otp', (req, res) => {
     .create({
       body: `Your OTP is ${otp}`,
       // from: '+1234567890', // your Twilio number
-      from: '+19348845064', // your Twilio number
+      from: process.env.TWILIO_PHONE_NUMBER, // your Twilio number
       to: mobileno,
     })
     .then((message) => {
