@@ -30,48 +30,11 @@ const Home = () => {
     }
   };
 
-  const handleVerifyOtp = async () => {
-    if (/^[0-9]{6}$/.test(otp)) {
-      const formattedMobile = `+91${mobileNo.trim()}`;
-      try {
-        const response = await axios.post('http://localhost:5000/api/verify-otp', { mobileno: formattedMobile, otp });
-        const receivedToken = response.data.token;
-        login(formattedMobile, receivedToken);
-        setShowModal(false);
-        //alert('Login successful!');
-        Swal.fire({
-          icon: 'success',
-          title: 'Login successful!',
-          text: 'Login successful!.',
-        })
-      } catch {
-        alert('Invalid OTP');
-      }
-    } else {
-      alert('Please enter a valid 6-digit OTP');
-    }
-  };
-
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#5dade2' }}>
-        <div className="container-fluid">
-          <a className="navbar-brand text-white" href="#"></a>
-          <div className="d-flex ms-auto">
-            {!token ? (
-              <button className="btn btn-light" onClick={handleLoginClick}>Login</button>
-            ) : (
-              <div className="d-flex align-items-center">
-                <span className="navbar-text text-white me-3">Welcome!</span>
-                <button className="btn btn-outline-light" onClick={logout}>Logout</button>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
-
+      <div className="container-fluid">
+      </div>
       {/* Watermark Text */}
-
       <div style={{
         backgroundColor: '#d6eaf8', // Light blue
         backgroundImage: `url(${catImage})`, // Background image URL
@@ -93,46 +56,6 @@ const Home = () => {
           <p style={{ fontSize: '1.2rem' }}>This site sells pets, as well as accessories, food, and care items for your beloved animals.</p>
         </div>
       </div>
-
-      <Modal
-        show={showModal}
-        onHide={() => setShowModal(false)}
-        centered // This will vertically center the modal
-        dialogClassName="modal-dialog-centered-custom" // Custom class for additional styling
-      >
-        <Modal.Header closeButton><Modal.Title>Login</Modal.Title></Modal.Header>
-        <Modal.Body>
-          {!showOtpInput ? (
-            <>
-              <Form.Group className="mb-3">
-                <Form.Label>Mobile Number (India only)</Form.Label>
-                <Form.Control
-                  type="text"
-                  maxLength="10"
-                  placeholder="Enter 10-digit mobile number"
-                  value={mobileNo}
-                  onChange={(e) => setMobileNo(e.target.value.replace(/\D/, ''))}
-                />
-              </Form.Group>
-              <Button variant="primary" onClick={handleSendOtp}>Send OTP</Button>
-            </>
-          ) : (
-            <>
-              <Form.Group className="mb-3">
-                <Form.Label>Enter OTP</Form.Label>
-                <Form.Control
-                  type="text"
-                  maxLength="6"
-                  placeholder="Enter 6-digit OTP"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                />
-              </Form.Group>
-              <Button variant="success" onClick={handleVerifyOtp}>Verify OTP</Button>
-            </>
-          )}
-        </Modal.Body>
-      </Modal>
     </>
   );
 };

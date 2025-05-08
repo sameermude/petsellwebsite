@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 
 console.log('✅ Aboutus model loaded:', typeof Aboutus); // Should be 'function'
 // Connect to MongoDB Atlas
-const uri = 'mongodb+srv://sameermon:marinedrive8@cluster0.olbnmpb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const uri = process.env.MONGO_URI;
 
 mongoose.connect(uri, {
   dbName: 'Testing', // ← Make sure this matches exactly (case-sensitive!)
