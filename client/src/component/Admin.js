@@ -87,7 +87,7 @@ const Admin = () => {
       case 'Advertisement':
         return <Ad userId={userId} />;
       case 'Dashboard':
-        return <Dashboard />;
+        return <Dashboard userId={userId}/>;
       default:
         return <div className="placeholder-text">Please select a section from the left.</div>;
     }

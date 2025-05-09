@@ -26,7 +26,10 @@ function AppContent() {
   const [showOtpInput, setShowOtpInput] = useState(false);
 
   const handleLogout = () => {
-    setToken(null);
+    logout();
+    setMobileNo('');  // Reset mobile number
+    setOtp('');       // Reset OTP
+    setShowOtpInput(false); // Reset OTP input visibility
     navigate('/');
   };
 
@@ -105,7 +108,7 @@ function AppContent() {
                 <li className="nav-item ms-3">
                   <div className="d-flex align-items-center">
                     <span className="navbar-text text-white me-3">Welcome!</span>
-                    <button className="btn btn-outline-light" onClick={logout}>Logout</button>
+                    <button className="btn btn-outline-light" onClick={handleLogout}>Logout</button>
                   </div>
                 </li>
               </>
