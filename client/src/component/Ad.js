@@ -3,8 +3,11 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import DeleteRecordModal from './DeleteRecordModal';
 import './style.css'; // Custom CSS
+
 //Created by Sameer Mude
 function Ads({ userId }) {
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   const [companies, setCompanies] = useState([]);
   const [inidata, setInidata] = useState({ address: [], category: [], pettype: [] });
   const [savedAd, setSavedAd] = useState([]);
@@ -29,6 +32,7 @@ function Ads({ userId }) {
   const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
+   Swal.fire({ icon: 'success', title: apiUrl, text: apiUrl });
     fetchCompanies();
     GetInitialdata();
     fetchSavedAd();
@@ -70,6 +74,9 @@ function Ads({ userId }) {
     if (!values.adtitle.trim()) errors.adtitle = "Enter the ad title";
     if (!values.addescription.trim()) errors.addescription = "Enter the ad description";
     if (!values.companyId) errors.companyId = "Select a company";
+    if (!values.pettypeid) errors.pettypeid = "Select a pet type";
+    if (!values.categoryid) errors.categoryid = "Select a category";
+    if (!values.addressid) errors.addressid = "Select a address";
     return errors;
   };
 
@@ -269,6 +276,7 @@ function Ads({ userId }) {
               <option value={value._id} key={value._id}>{value.categoryname}</option>
             ))}
           </select>
+          {formErrors.categoryid && <small className="text-danger">{formErrors.categoryid}</small>}
         </div>
       </div>
 
@@ -281,6 +289,7 @@ function Ads({ userId }) {
               <option value={value._id} key={value._id}>{value.addresstype}</option>
             ))}
           </select>
+          {formErrors.addressid && <small className="text-danger">{formErrors.addressid}</small>}
         </div>
         <label className="col-sm-2 col-form-label text-end">Pet Type</label>
         <div className="col-sm-4">
@@ -290,6 +299,7 @@ function Ads({ userId }) {
               <option value={value._id} key={value._id}>{value.type}</option>
             ))}
           </select>
+          {formErrors.pettypeid && <small className="text-danger">{formErrors.pettypeid}</small>}
         </div>
       </div>
 
