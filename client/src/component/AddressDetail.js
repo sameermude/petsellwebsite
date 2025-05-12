@@ -28,8 +28,7 @@ function AddressDetail({ userId }) {
         const type = "Address";
         if (!companyId) return;
         try {
-            //const response = await axios.get(`http://localhost:5000/api/getdata/${companyId}/${type}`);
-            const response = await axios.get(`http://localhost:5000/api/getdata/-1/Address/${userId}`);
+            const response = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Address/${userId}`);
             setSavedAddresses(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
             console.error("Error fetching addresses:", error);
@@ -39,9 +38,9 @@ function AddressDetail({ userId }) {
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
-                const companiesRes = await axios.get(`http://localhost:5000/api/getdata/-1/Company/${userId}`);
+                const companiesRes = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Company/${userId}`);
                 setCompanies(Array.isArray(companiesRes.data) ? companiesRes.data : []);
-                const addressRes = await axios.get(`http://localhost:5000/api/getdata/-1/Address/${userId}`);
+                const addressRes = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Address/${userId}`);
                 setSavedAddresses(Array.isArray(addressRes.data) ? addressRes.data : []);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -82,9 +81,9 @@ function AddressDetail({ userId }) {
         if (Object.keys(errors).length === 0) {
             try {
                 if (!dataToSubmit._id) {
-                    await axios.post(`http://localhost:5000/api/save/${type}`, dataToSubmit);
+                    await axios.post(process.env.REACT_APP_ADDRESS + `/api/save/${type}`, dataToSubmit);
                 } else {
-                    await axios.put(`http://localhost:5000/api/update/${dataToSubmit._id}/${type}`, dataToSubmit);
+                    await axios.put(process.env.REACT_APP_ADDRESS + `/api/update/${dataToSubmit._id}/${type}`, dataToSubmit);
                 }
 
                 Swal.fire({
@@ -131,30 +130,7 @@ function AddressDetail({ userId }) {
         setSelectedCompany(address.companyId || '');
         setEditingAddress(address);
     };
-
-    /*   const handleDeleteConfirm = async () => {
-          const type = "Address";
-          try {
-              const confirm = await Swal.fire({
-                  title: 'Are you sure?',
-                  text: 'This entry will be deleted permanently.',
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonText: 'Yes, delete it!',
-                  cancelButtonText: 'Cancel'
-              }); 
   
-             if (confirm.isConfirmed) {
-                  await axios.delete(`http://localhost:5000/api/delete/${deleteid}/${type}`);
-                  Swal.fire('Deleted!', 'The entry has been deleted.', 'success');
-                  fetchSavedAddresses(-1);
-                  handleClear(selectedCompany);
-              }
-          } catch (error) {
-              console.error("Delete error:", error);
-              Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to delete.' });
-          }
-      }; */
     const handleDeleteConfirm = async (id) => {
         const type = "Address";
         try {
@@ -168,7 +144,7 @@ function AddressDetail({ userId }) {
             });
 
             if (confirm.isConfirmed) {
-                await axios.delete(`http://localhost:5000/api/delete/${id}/${type}`);
+                await axios.delete(process.env.REACT_APP_ADDRESS + `/api/delete/${id}/${type}`);
                 Swal.fire('Deleted!', 'The entry has been deleted.', 'success');
                 fetchSavedAddresses(-1);
                 handleClear(selectedCompany);

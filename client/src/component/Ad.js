@@ -6,8 +6,7 @@ import './style.css'; // Custom CSS
 
 //Created by Sameer Mude
 function Ads({ userId }) {
-  const apiUrl = process.env.REACT_APP_API_URL;
-
+  const value = process.env.REACT_APP_ADDRESS;
   const [companies, setCompanies] = useState([]);
   const [inidata, setInidata] = useState({ address: [], category: [], pettype: [] });
   const [savedAd, setSavedAd] = useState([]);
@@ -32,7 +31,8 @@ function Ads({ userId }) {
   const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
-   Swal.fire({ icon: 'success', title: apiUrl, text: apiUrl });
+    const abc = process.env.REACT_APP_API_BASE_URL;
+
     fetchCompanies();
     GetInitialdata();
     fetchSavedAd();
@@ -44,7 +44,7 @@ function Ads({ userId }) {
 
   const fetchCompanies = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/getdata/-1/Company/${userId}`);
+      const res = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Company/${userId}`);
       setCompanies(res.data);
     } catch (err) {
       console.error(err);
@@ -53,7 +53,7 @@ function Ads({ userId }) {
 
   const GetInitialdata = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/data/all/Ad/${userId}`);
+      const response = await axios.get(process.env.REACT_APP_ADDRESS + `/api/data/all/Ad/${userId}`);
       setInidata(response.data);
     } catch (error) {
       console.error(error);
@@ -62,7 +62,7 @@ function Ads({ userId }) {
 
   const fetchSavedAd = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/getdata/-1/Ad/${userId}`);
+      const response = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Ad/${userId}`);
       setSavedAd(response.data);
     } catch (error) {
       console.error(error);
@@ -178,12 +178,12 @@ function Ads({ userId }) {
         });
 
         if (!formData._id) {
-          const res = await axios.post('http://localhost:5000/api/ads', fd, {
+          const res = await axios.post(process.env.REACT_APP_ADDRESS + '/api/ads', fd, {
             headers: { 'Content-Type': 'multipart/form-data' }
           });
           //await axios.post(`http://localhost:5000/api/save/${type}`, formData);
         } else {
-          const res = await axios.put(`http://localhost:5000/api/ads1/${formData._id}`, fd, {
+          const res = await axios.put(process.env.REACT_APP_ADDRESS + `/api/ads1/${formData._id}`, fd, {
             headers: { 'Content-Type': 'multipart/form-data' }
           });
           //await axios.put(`http://localhost:5000/api/update/${formData._id}/${type}`, formData);
@@ -222,7 +222,7 @@ function Ads({ userId }) {
 
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/delete/${deleteid}/Ad`);
+      await axios.delete(process.env.REACT_APP_ADDRESS + `/api/delete/${deleteid}/Ad`);
       Swal.fire({ icon: 'success', title: 'Deleted', text: 'Ad deleted successfully.' });
       fetchSavedAd();
     } catch (error) {
@@ -233,7 +233,7 @@ function Ads({ userId }) {
 
   const handleCloseAd = async (adId, shouldClose) => {
     try {
-      await axios.put(`http://localhost:5000/api/adclose/${adId}`, { adclose: shouldClose });
+      await axios.put(process.env.REACT_APP_ADDRESS + `/api/adclose/${adId}`, { adclose: shouldClose });
       Swal.fire({
         icon: 'success',
         title: shouldClose ? 'Ad Closed' : 'Ad Reopened',

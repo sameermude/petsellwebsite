@@ -14,10 +14,10 @@ function Aboutus() {
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
-                const companiesRes = await axios.get(`http://localhost:5000/api/getdata/-1/Company`);
+                const companiesRes = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Company`);
                 setCompanies(companiesRes.data);
 
-                const aboutRes = await axios.get(`http://localhost:5000/api/getdata/-1/Aboutus`);
+                const aboutRes = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Aboutus`);
                 const list = Array.isArray(aboutRes.data) ? aboutRes.data : [];
                 setAboutList(list);
                 setFilteredList(list);
@@ -71,9 +71,9 @@ function Aboutus() {
 
         try {
             if (!formData._id) {
-                await axios.post(`http://localhost:5000/api/save/${type}`, payload);
+                await axios.post(process.env.REACT_APP_ADDRESS + `/api/save/${type}`, payload);
             } else {
-                await axios.put(`http://localhost:5000/api/update/${formData._id}/${type}`, payload);
+                await axios.put(process.env.REACT_APP_ADDRESS + `/api/update/${formData._id}/${type}`, payload);
             }
 
             Swal.fire({
@@ -94,7 +94,7 @@ function Aboutus() {
 
     const loadlist = async () => {
         try {
-            const updatedRes = await axios.get(`http://localhost:5000/api/getdata/-1/Aboutus`);
+            const updatedRes = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Aboutus`);
             const newList = Array.isArray(updatedRes.data) ? [...updatedRes.data] : [];
             setAboutList(newList);
             fetchAboutList(selectedCompanyId, newList);
@@ -124,7 +124,7 @@ function Aboutus() {
 
         if (confirm.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:5000/api/delete/${id}/Aboutus`);
+                await axios.delete(process.env.REACT_APP_ADDRESS + `/api/delete/${id}/Aboutus`);
                 Swal.fire('Deleted!', 'The entry has been deleted.', 'success');
                 await loadlist();
             } catch (error) {

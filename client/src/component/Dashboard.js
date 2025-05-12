@@ -19,7 +19,7 @@ const Dashboard = ({ userId }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/data/alldata/Ad/${userId}`);
+                const response = await axios.get(process.env.REACT_APP_ADDRESS + `/api/data/alldata/Ad/${userId}`);
                 const fetchedPetTypes = response.data.pettype || [];
                 const fetchedCategories = response.data.category || [];
 
@@ -30,7 +30,7 @@ const Dashboard = ({ userId }) => {
                     const firstPetType = fetchedPetTypes[0];
                     setSelectedPetTypeId(firstPetType._id);
 
-                    const adResponse = await axios.get('http://localhost:5000/api/adselected', {
+                    const adResponse = await axios.get(process.env.REACT_APP_ADDRESS + '/api/adselected', {
                         params: { pettypeid: firstPetType._id }
                     });
                     const adsData = adResponse.data || [];
@@ -64,7 +64,7 @@ const Dashboard = ({ userId }) => {
         setSelectedPetTypeId(petTypeId);
         setSelectedCategoryId('');
         try {
-            const response = await axios.get('http://localhost:5000/api/adselected', {
+            const response = await axios.get(process.env.REACT_APP_ADDRESS + '/api/adselected', {
                 params: { pettypeid: petTypeId }
             });
             const adsData = response.data || [];
@@ -78,7 +78,7 @@ const Dashboard = ({ userId }) => {
     const handleCategorySelect = async (categoryId) => {
         setSelectedCategoryId(categoryId);
         try {
-            const response = await axios.get('http://localhost:5000/api/adselected', {
+            const response = await axios.get(process.env.REACT_APP_ADDRESS + '/api/adselected', {
                 params: { categoryid: categoryId, pettypeid: selectedPetTypeId }
             });
             const adsData = response.data || [];
@@ -225,8 +225,8 @@ const Dashboard = ({ userId }) => {
                             <div key={idx} className="col-md-6 col-lg-4">
                                 <div className="card ad-card h-100 d-flex flex-column p-3 position-relative rounded-3">
                                     {adImage && (
-                                        <img
-                                            src={adImage.startsWith('data:image') ? adImage : `http://localhost:5000${adImage}`}
+                                        <img  
+                                            src={adImage.startsWith('data:image') ? adImage : process.env.REACT_APP_ADDRESS + `${adImage}`}
                                             alt="Ad Thumbnail"
                                             className="ad-card-thumbnail rounded-3"
                                         />
@@ -277,7 +277,7 @@ const Dashboard = ({ userId }) => {
                                 {selectedAd.images.map((image, idx) => (
                                     <img
                                         key={idx}
-                                        src={image.startsWith('data:image') ? image : `http://localhost:5000${image}`}
+                                        src={image.startsWith('data:image') ? image : process.env.REACT_APP_ADDRESS + `${image}`}
                                         alt={`Ad Image ${idx + 1}`}
                                         style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                                     />

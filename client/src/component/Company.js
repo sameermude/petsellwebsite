@@ -26,7 +26,7 @@ function Company({ userId }) {
 
     const fetchCompanyList = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/getdata/-1/Company/${userId}`);
+            const response = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Company/${userId}`);
             setCompanyList(response.data);
         } catch (error) {
             console.error('Error fetching companies:', error);
@@ -62,10 +62,10 @@ function Company({ userId }) {
             try {
                 let response;
                 if (!formData._id) {
-                    response = await axios.post(`http://localhost:5000/api/save/Company`, formData);
+                    response = await axios.post(process.env.REACT_APP_ADDRESS + `/api/save/Company`, formData);
                     Swal.fire('Success', 'Company saved successfully.', 'success');
                 } else {
-                    response = await axios.put(`http://localhost:5000/api/update/${formData._id}/Company`, formData);
+                    response = await axios.put(process.env.REACT_APP_ADDRESS + `/api/update/${formData._id}/Company`, formData);
                     Swal.fire('Success', 'Company updated successfully.', 'success');
                 }
                 fetchCompanyList();
@@ -129,10 +129,10 @@ function Company({ userId }) {
     
         if (confirm.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:5000/api/delete/${formData._id}/Company`);
+                await axios.delete(process.env.REACT_APP_ADDRESS + `/api/delete/${formData._id}/Company`);
                 Swal.fire('Deleted!', 'The entry has been deleted.', 'success');
     
-                const res = await axios.get(`http://localhost:5000/api/getdata/-1/Company`);
+                const res = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Company`);
                 const fullList = Array.isArray(res.data) ? res.data : [];
                 setAboutList(fullList);
                 setFilteredList(fullList);

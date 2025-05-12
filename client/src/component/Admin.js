@@ -34,7 +34,7 @@ const Admin = () => {
     const fetchUserId = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:5000/api/getdatatoken/${mobileNo}/User`, {
+        const response = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdatatoken/${mobileNo}/User`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
