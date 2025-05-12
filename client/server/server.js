@@ -79,6 +79,7 @@ const storage = multer.diskStorage({
     cb(null, `${uniqueSuffix}-${file.fieldname}${ext}`);
   }
 });
+
 const upload = multer({ storage });
 
 const authenticateToken = (req, res, next) => {
@@ -98,7 +99,6 @@ const authenticateToken = (req, res, next) => {
 
 app.post('/api/send-otp', (req, res) => {
   const { mobileno } = req.body;
-  //console.log('enter send otp' + mobileno)
   // Generate a random 6-digit OTP
   const otp = crypto.randomInt(100000, 999999).toString();
 
@@ -114,7 +114,6 @@ app.post('/api/send-otp', (req, res) => {
       to: mobileno,
     })
     .then((message) => {
-      console.log('OTP sent: ', message.sid);
       res.status(200).json({ message: 'OTP sent successfully' });
     })
     .catch((error) => {
@@ -200,9 +199,6 @@ app.post('/api/verify-otp', async (req, res) => {
 // Routes
 app.post('/api/ads', upload.array('images', 5), async (req, res) => {
   try {
-    console.log('enter here11');
-    console.log('Received ad creation request');
-
     const uploadDir = path.join(__dirname, 'uploads');
     console.log('uploadDir ' + uploadDir);
     // Create the folder if it does not exist
@@ -230,8 +226,6 @@ app.post('/api/ads', upload.array('images', 5), async (req, res) => {
 
     // Map uploaded files to image URLs
     const imageUrls = req.files.map(file => `/uploads/${file.filename}`);
-    console.log('imageUrls ' + imageUrls);
-
     // Build ad object
     const adData = {
       companyId,
@@ -269,8 +263,6 @@ app.put('/api/ads1/:id', upload.array('images', 5), async (req, res) => {
     } = req.body;
     // Map newly uploaded images to URLs
     const uploadedImageUrls = req.files.map(file => `/uploads/${file.filename}`);
-    console.log('existingImages' + existingImages)
-    console.log('uploadedImageUrls' + uploadedImageUrls)
     /*     const imageArray1 = typeof existingImages === 'string' ? existingImages.split(',') : (Array.isArray(existingImages) ? existingImages : []);
         const uploadedImageUrls1 = typeof existingImages === 'string' ? existingImages.split(',') : (Array.isArray(uploadedImageUrls) ? uploadedImageUrls : []); */
     const imageArray1 = typeof existingImages === 'string'
@@ -287,7 +279,6 @@ app.put('/api/ads1/:id', upload.array('images', 5), async (req, res) => {
       ...(uploadedImageUrls1 || [])  // Ensure uploadedImageUrls is an array (default to empty array if undefined or null)
     ];
     const allImages1 = typeof existingImages === 'string' ? existingImages.split(',') : (Array.isArray(allImages) ? allImages : []);
-    console.log('allImages  ' + allImages1)
     const adData = {
       companyId,
       categoryid,
@@ -484,12 +475,9 @@ app.put('/api/update/:id/:type', async (req, res) => {
 // Get all addresses
 app.get('/api/getdata/:filter/:type/:userId', async (req, res) => {
   try {
-    //console.log('code reach service')
-    //const filter = req.query.filter; // Get the filter parameter from the request
     const filter = req.params.filter; // Get the _id from the URL parameter
     const type = req.params.type; // Get the _id from the URL parameter
     const userIds = req.params.userId; // Get the _id from the URL parameter
-    //console.log("reach here getdata")
     if (type == "Address") {
       if (filter === '-1') {
         Data = await Address.find({ userId: userIds });
@@ -538,7 +526,6 @@ app.get('/api/getdata/:filter/:type/:userId', async (req, res) => {
       else {
         return res.status(400).json({ error: 'Invalid ID format' });
       }
-
       return res.json(Data);
     }
     if (type === 'User') {
@@ -581,7 +568,7 @@ app.put('/api/adclose/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { adclose } = req.body; // expect { adclose: true } or false
-    console.log('enter close')
+    
     const updatedAd = await Ad.findByIdAndUpdate(
       id,
       { adclose },
@@ -601,11 +588,8 @@ app.put('/api/adclose/:id', async (req, res) => {
 
 app.get('/api/getdatatoken/:filter/:type', authenticateToken, async (req, res) => {
   try {
-    //console.log('code reach service')
-    //const filter = req.query.filter; // Get the filter parameter from the request
     const filter = req.params.filter; // Get the _id from the URL parameter
     const type = req.params.type; // Get the _id from the URL parameter
-    //console.log("reach here getdata")
     if (type == "Address") {
       if (filter === '-1') {
         Data = await Address.find();
@@ -695,11 +679,8 @@ app.get('/api/getdatatoken/:filter/:type', authenticateToken, async (req, res) =
 
 app.delete('/api/delete/:id/:type', async (req, res) => {
   try {
-    console.log('type');
-    console.log('type' + " " + req.params.id);
     const Id = req.params.id; // Get the _id from the URL parameter
     const type = req.params.type; // Get the _id from the URL parameter
-    //console.log(type + " " + Id);
     // Use Mongoose to delete the address by its _id
     if (type == "Address") {
       const result = await Address.deleteOne({ _id: Id });
@@ -713,7 +694,6 @@ app.delete('/api/delete/:id/:type', async (req, res) => {
       const addressCount = await Address.countDocuments({ companyId: Id });
       const adCount = await Ad.countDocuments({ companyId: Id });
       if (addressCount > 0 || adCount > 0) {
-        console.log('here lol');
         return res.status(400).json({
           message: 'Cannot delete company. It is referenced in other collections.'
         });
@@ -741,8 +721,6 @@ app.delete('/api/delete/:id/:type', async (req, res) => {
         res.status(404).json({ error: 'No Ad found with the specified ID.' });
       }
     }
-
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -750,13 +728,10 @@ app.delete('/api/delete/:id/:type', async (req, res) => {
 
 app.get('/api/data/:filter/:type/:userId', async (req, res) => {
   try {
-    console.log('here11')
     const type = req.params.type; // Get the _id from the URL parameter
     const filter = req.params.filter; // Get the _id from the URL parameter
     const userIds = req.params.userId; // Get the _id from the URL parameter
-    console.log('here')
     let addressData = null;
-    console.log('here1')
     if (type == "Ad") {
       if (filter != 'alldata')
         addressData = await Address.find({ userId: userIds });
@@ -771,7 +746,6 @@ app.get('/api/data/:filter/:type/:userId', async (req, res) => {
         category: categoryData,
         pettype: PettypeData,
       };
-      // console.log(combinedData);
       res.json(combinedData);
     }
   } catch (error) {
