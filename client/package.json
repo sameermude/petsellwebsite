@@ -2,6 +2,9 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@maptiler/geocoding-control": "^2.1.6",
     "@testing-library/dom": "^10.4.0",
