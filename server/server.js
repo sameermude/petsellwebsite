@@ -125,9 +125,10 @@ app.get('/twilio-check', (req, res) => {
 });
 
 app.get('/send-otp1', async (req, res) => {
-  const to = req.query.to; // e.g., /send-otp?to=+917021358785
+  // Hardcode the phone number to send OTP to
+  const to = '+917021358785'; // Replace this with the number you want to use
 
-  if (!to) return res.status(400).json({ error: 'Missing "to" number in query' });
+  if (!to) return res.status(400).json({ error: 'Missing "to" number' });
 
   const client = require('twilio')(
     process.env.TWILIO_ACCOUNT_SID,
@@ -146,6 +147,7 @@ app.get('/send-otp1', async (req, res) => {
     res.status(500).json({ error: 'Failed to send message', details: err.message });
   }
 });
+
 
 app.get('/test-twilio', async (req, res) => {
   try {
