@@ -97,6 +97,34 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
+app.get('/twilio-check', (req, res) => {
+  const accountSid = process.env.TWILIO_ACCOUNT_SID;
+  const authToken = process.env.TWILIO_AUTH_TOKEN;
+
+  if (!accountSid || !authToken) {
+    return res.status(500).json({
+      success: false,
+      message: 'Missing Twilio credentials in environment variables',
+    });
+  }
+
+  try {
+    const client = twilio(accountSid, authToken);
+    res.json({
+      success: true,
+      message: 'Twilio client initialized successfully',
+      accountSidLength: accountSid.length,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to initialize Twilio client',
+      error: error.message,
+    });
+  }
+});
+
+
 app.get('/test-twilio', async (req, res) => {
   try {
     const testNumber = req.query.to; // Example: /test-twilio?to=+919999999999
