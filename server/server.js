@@ -172,7 +172,7 @@ app.get('/test-twilio', async (req, res) => {
 
 //sa
 app.post('/api/send-otp', async (req, res) => {
-  const { mobileno } = req.body;
+  /* const { mobileno } = req.body;
 
   if (!mobileno || !/^\+[1-9]\d{1,14}$/.test(mobileno)) {
     return res.status(400).json({ error: 'Invalid phone number format' });
@@ -202,6 +202,27 @@ app.post('/api/send-otp', async (req, res) => {
   } catch (error) {
     console.error('Error sending OTP: ', error);
     res.status(500).json({ error: 'Failed to send OTP', details: error.message });
+  } */
+ // Hardcode the phone number to send OTP to
+  const to = '+917021358785'; // Replace this with the number you want to use
+
+  if (!to) return res.status(400).json({ error: 'Missing "to" number' });
+
+  const client = require('twilio')(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+  );
+
+  try {
+    const message = await client.messages.create({
+      body: 'Your OTP is 123456',
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to,
+    });
+
+    res.json({ success: true, sid: message.sid });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to send message', details: err.message });
   }
 });
 
