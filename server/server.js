@@ -124,6 +124,28 @@ app.get('/twilio-check', (req, res) => {
   }
 });
 
+app.get('/send-otp1', async (req, res) => {
+  const to = req.query.to; // e.g., /send-otp?to=+917021358785
+
+  if (!to) return res.status(400).json({ error: 'Missing "to" number in query' });
+
+  const client = require('twilio')(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+  );
+
+  try {
+    const message = await client.messages.create({
+      body: 'Your OTP is 123456',
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to,
+    });
+
+    res.json({ success: true, sid: message.sid });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to send message', details: err.message });
+  }
+});
 
 app.get('/test-twilio', async (req, res) => {
   try {
