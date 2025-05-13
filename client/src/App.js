@@ -55,7 +55,7 @@ function AppContent() {
     if (/^[0-9]{6}$/.test(otp)) {
       const formattedMobile = `+91${mobileNo.trim()}`;
       try {
-        const response = await axios.post('http://localhost:5000/api/verify-otp', { mobileno: formattedMobile, otp });
+        const response = await axios.post(process.env.REACT_APP_ADDRESS + '/api/verify-otp', { mobileno: formattedMobile, otp });
         const receivedToken = response.data.token;
         login(formattedMobile, receivedToken);
         setShowModal(false);
