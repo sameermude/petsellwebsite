@@ -222,7 +222,7 @@ app.post('/api/send-otp', async (req, res) => {
 
     res.json({ success: true, sid: message.sid });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to send message', details: err.message });
+    res.status(500).json({ error: 'Failed to send message11', details: err.message });
   }
 });
 
