@@ -97,6 +97,28 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
+app.get('/test-twilio', async (req, res) => {
+  try {
+    const testNumber = req.query.to; // Example: /test-twilio?to=+919999999999
+
+    if (!testNumber) {
+      return res.status(400).json({ error: 'Missing "to" query parameter (mobile number)' });
+    }
+
+    const message = await client.messages.create({
+      body: 'Test message from Render server!',
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: testNumber,
+    });
+
+    res.status(200).json({ success: true, sid: message.sid });
+  } catch (err) {
+    console.error('Twilio error:', err);
+    res.status(500).json({ error: 'Failed to send message', details: err.message });
+  }
+});
+
+
 app.post('/api/send-otp', (req, res) => {
   const { mobileno } = req.body;
   // Generate a random 6-digit OTP
