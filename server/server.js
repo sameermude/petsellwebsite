@@ -97,135 +97,30 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
-app.get('/twilio-check', (req, res) => {
-  const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
-
-  if (!accountSid || !authToken) {
-    return res.status(500).json({
-      success: false,
-      message: 'Missing Twilio credentials in environment variables',
-    });
-  }
-
-  try {
-    const client = twilio(accountSid, authToken);
-    res.json({
-      success: true,
-      message: 'Twilio client initialized successfully',
-      accountSidLength: accountSid.length,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to initialize Twilio client',
-      error: error.message,
-    });
-  }
-});
-
-app.get('/send-otp1', async (req, res) => {
-  // Hardcode the phone number to send OTP to
-  const to = '+917021358785'; // Replace this with the number you want to use
-
-  if (!to) return res.status(400).json({ error: 'Missing "to" number' });
-
-  const client = require('twilio')(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-
-  try {
-    const message = await client.messages.create({
-      body: 'Your OTP is 123456',
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to,
-    });
-
-    res.json({ success: true, sid: message.sid });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to send message', details: err.message });
-  }
-});
-
-
-app.get('/test-twilio', async (req, res) => {
-  try {
-    const testNumber = req.query.to; // Example: /test-twilio?to=+919999999999
-
-    if (!testNumber) {
-      return res.status(400).json({ error: 'Missing "to" query parameter (mobile number)' });
-    }
-
-    const message = await client.messages.create({
-      body: 'Test message from Render server!',
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to: testNumber,
-    });
-
-    res.status(200).json({ success: true, sid: message.sid });
-  } catch (err) {
-    console.error('Twilio error:', err);
-    res.status(500).json({ error: 'Failed to send message', details: err.message });
-  }
-});
-
-//sa
-app.post('/api/send-otp', async (req, res) => {
-  /* const { mobileno } = req.body;
-
-  if (!mobileno || !/^\+[1-9]\d{1,14}$/.test(mobileno)) {
-    return res.status(400).json({ error: 'Invalid phone number format' });
-  }
-
+app.post('/api/send-otp', (req, res) => {
+  const { mobileno } = req.body;
   // Generate a random 6-digit OTP
   const otp = crypto.randomInt(100000, 999999).toString();
 
   // Store OTP temporarily (in memory for this example)
   otpStore[mobileno] = otp;
 
-  // Initialize Twilio client with environment variables
-  const client = require('twilio')(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-
-  try {
-    // Send OTP via SMS using Twilio
-    const message = await client.messages.create({
-      body: `Your OTP is ${otp}. Please use this code to complete your process.`,
-      from: process.env.TWILIO_PHONE_NUMBER, // Your Twilio phone number
-      to: mobileno, // The phone number passed in the request body
+  // Send OTP via SMS using Twilio
+  client.messages
+    .create({
+      body: `Your OTP is ${otp}`,
+      // from: '+1234567890', // your Twilio number
+      from: process.env.TWILIO_PHONE_NUMBER, // your Twilio number
+      to: mobileno,
+    })
+    .then((message) => {
+      res.status(200).json({ message: 'OTP sent successfully' });
+    })
+    .catch((error) => {
+      console.error('Error sending OTP: ', error);
+      res.status(500).json({ error: 'Failed to send OTP' });
     });
-
-    res.status(200).json({ message: 'OTP sent successfully', sid: message.sid });
-  } catch (error) {
-    console.error('Error sending OTP: ', error);
-    res.status(500).json({ error: 'Failed to send OTP', details: error.message });
-  } */
- // Hardcode the phone number to send OTP to
-  const to = '+917021358785'; // Replace this with the number you want to use
-
-  if (!to) return res.status(400).json({ error: 'Missing "to" number' });
-
-  const client = require('twilio')(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-
-  try {
-    const message = await client.messages.create({
-      body: 'Your OTP is 123456',
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to,
-    });
-
-    res.json({ success: true, sid: message.sid });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to send message11', details: err.message });
-  }
 });
-
 
 const generateToken = (user) => {
   const payload = {
@@ -673,7 +568,7 @@ app.put('/api/adclose/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { adclose } = req.body; // expect { adclose: true } or false
-
+    
     const updatedAd = await Ad.findByIdAndUpdate(
       id,
       { adclose },
