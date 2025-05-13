@@ -130,7 +130,7 @@ function AddressDetail({ userId }) {
         setSelectedCompany(address.companyId || '');
         setEditingAddress(address);
     };
-  
+
     const handleDeleteConfirm = async (id) => {
         const type = "Address";
         try {
@@ -256,11 +256,11 @@ function AddressDetail({ userId }) {
                 <table className="table align-middle mb-0 table-bordered border-light-subtle">
                     <thead className="table-primary text-center">
                         <tr>
-                            <th style={{ width: '20%' }}>Company</th>
-                            <th style={{ width: '30%' }}>Address</th>
-                            <th style={{ width: '20%' }}>Office</th>
-                            <th style={{ width: '15%' }}>Type</th>
-                            <th style={{ width: '15%' }}>Actions</th>
+                            <th className="col-company">Company</th>
+                            <th className="col-address">Address</th>
+                            <th className="col-office">Office</th>
+                            <th className="col-type">Type</th>
+                            <th className="col-actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -274,9 +274,21 @@ function AddressDetail({ userId }) {
                                         <td>{addr.office}</td>
                                         <td>{addr.addresstype}</td>
                                         <td>
-                                            <div className="d-flex justify-content-center gap-2">
-                                                <button className="btn btn-success btn-sm" onClick={() => handleEdit(addr)}>Edit</button>
-                                                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteConfirm(addr._id)}>Delete</button>
+                                            <div className="d-flex flex-wrap justify-content-center gap-2">
+                                                <button
+                                                    className="btn btn-success btn-sm"
+                                                    onClick={() => handleEdit(addr)}
+                                                    style={{ minWidth: '70px' }}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => handleDeleteConfirm(addr._id)}
+                                                    style={{ minWidth: '70px' }}
+                                                >
+                                                    Delete
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
