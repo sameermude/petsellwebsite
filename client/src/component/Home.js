@@ -20,6 +20,7 @@ const Home = () => {
     if (validMobile) {
       const formattedMobile = `+91${trimmed}`;
       try {
+           alert(process.env.REACT_APP_ADDRESS );
         await axios.post(process.env.REACT_APP_ADDRESS + '/api/send-otp', { mobileno: formattedMobile });
         setShowOtpInput(true);
       } catch (error) {
