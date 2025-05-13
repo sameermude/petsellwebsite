@@ -268,7 +268,7 @@ function Ads({ userId }) {
           </select>
           {formErrors.companyId && <small className="text-danger">{formErrors.companyId}</small>}
         </div>
-        <label className="col-sm-2 col-form-label text-end">Category</label>
+        <label className="col-12 col-sm-2 col-form-label text-start text-sm-end">Category</label>
         <div className="col-sm-4">
           <select className="form-select" name="categoryid" value={formData.categoryid} onChange={handleChange}>
             <option value="">-- Select Category --</option>
@@ -281,8 +281,8 @@ function Ads({ userId }) {
       </div>
 
       <div className="row mb-3">
-        <label className="col-sm-2 col-form-label">Address</label>
-        <div className="col-sm-4">
+        <label className="col-12 col-sm-2 col-form-label">Address</label>
+        <div className="col-12 col-sm-4">
           <select className="form-select" name="addressid" value={formData.addressid} onChange={handleChange}>
             <option value="">-- Select Address --</option>
             {inidata.address.map((value) => (
@@ -291,8 +291,10 @@ function Ads({ userId }) {
           </select>
           {formErrors.addressid && <small className="text-danger">{formErrors.addressid}</small>}
         </div>
-        <label className="col-sm-2 col-form-label text-end">Pet Type</label>
-        <div className="col-sm-4">
+
+        {/* Pet Type on the same row */}
+        <label className="col-12 col-sm-2 col-form-label text-start text-sm-end">Pet Type</label>
+        <div className="col-12 col-sm-4">
           <select className="form-select" name="pettypeid" value={formData.pettypeid} onChange={handleChange}>
             <option value="">-- Select Pet Type --</option>
             {inidata.pettype.map((value) => (
@@ -381,9 +383,9 @@ function Ads({ userId }) {
           <thead className="table-primary text-center">
             <tr>
               <th>Company</th>
-              <th>Category</th>
-              <th>Address</th>
-              <th>Pet Type</th>
+              <th className="d-none d-sm-table-cell">Category</th>
+              <th className="d-none d-sm-table-cell">Address</th>
+              <th className="d-none d-sm-table-cell">Pet Type</th>
               <th>Ad Title</th>
               <th>Description</th>
               <th>Actions</th>
@@ -394,19 +396,33 @@ function Ads({ userId }) {
               savedAd.map((ad) => (
                 <tr key={ad._id}>
                   <td>{ad.companyId?.companyname || 'N/A'}</td>
-                  <td>{ad.categoryid?.categoryname || 'N/A'}</td>
-                  <td>{ad.addressid?.addresstype || 'N/A'}</td>
-                  <td>{ad.pettypeid?.type || 'N/A'}</td>
+                  <td className="d-none d-sm-table-cell">{ad.categoryid?.categoryname || 'N/A'}</td>
+                  <td className="d-none d-sm-table-cell">{ad.addressid?.addresstype || 'N/A'}</td>
+                  <td className="d-none d-sm-table-cell">{ad.pettypeid?.type || 'N/A'}</td>
                   <td>{ad.adtitle}</td>
                   <td>{ad.addescription?.slice(0, 40)}...</td>
                   <td className="text-center">
-                    <button className="btn btn-success btn-sm me-2" onClick={() => handleEdit(ad)}>Edit</button>
-                    <button className="btn btn-danger btn-sm me-2" onClick={() => handleDelete(ad)}>Delete</button>
-                    {ad.adclose ? (
-                      <button className="btn btn-warning btn-sm" onClick={() => handleCloseAd(ad._id, false)}>Unclose</button>
-                    ) : (
-                      <button className="btn btn-dark btn-sm" onClick={() => handleCloseAd(ad._id, true)}>Close</button>
-                    )}
+                    {/* Desktop and Tablet - Buttons in a row */}
+                    <div className="d-none d-sm-flex justify-content-center mb-2">
+                      <button className="btn btn-success btn-sm me-2" onClick={() => handleEdit(ad)}>Edit</button>
+                      <button className="btn btn-danger btn-sm me-2" onClick={() => handleDelete(ad)}>Delete</button>
+                      {ad.adclose ? (
+                        <button className="btn btn-warning btn-sm" onClick={() => handleCloseAd(ad._id, false)}>Unclose</button>
+                      ) : (
+                        <button className="btn btn-dark btn-sm" onClick={() => handleCloseAd(ad._id, true)}>Close</button>
+                      )}
+                    </div>
+
+                    {/* Mobile - Buttons stacked vertically */}
+                    <div className="d-block d-sm-none w-100 mb-2">
+                      <button className="btn btn-success btn-sm w-100 mb-2" onClick={() => handleEdit(ad)}>Edit</button>
+                      <button className="btn btn-danger btn-sm w-100 mb-2" onClick={() => handleDelete(ad)}>Delete</button>
+                      {ad.adclose ? (
+                        <button className="btn btn-warning btn-sm w-100 mb-2" onClick={() => handleCloseAd(ad._id, false)}>Unclose</button>
+                      ) : (
+                        <button className="btn btn-dark btn-sm w-100 mb-2" onClick={() => handleCloseAd(ad._id, true)}>Close</button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))

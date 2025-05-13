@@ -259,7 +259,7 @@ function AddressDetail({ userId }) {
                             <th className="col-company">Company</th>
                             <th className="col-address">Address</th>
                             <th className="col-office">Office</th>
-                            <th className="col-type">Type</th>
+                            <th className="col-type d-none d-sm-table-cell">Type</th>
                             <th className="col-actions">Actions</th>
                         </tr>
                     </thead>
@@ -272,7 +272,7 @@ function AddressDetail({ userId }) {
                                         <td>{companyName}</td>
                                         <td>{addr.address}</td>
                                         <td>{addr.office}</td>
-                                        <td>{addr.addresstype}</td>
+                                        <td className="d-none d-sm-table-cell">{addr.addresstype}</td>
                                         <td>
                                             <div className="d-flex flex-wrap justify-content-center gap-2">
                                                 <button
