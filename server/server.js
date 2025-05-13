@@ -173,6 +173,11 @@ app.get('/test-twilio', async (req, res) => {
 
 app.post('/api/send-otp', (req, res) => {
   const { mobileno } = req.body;
+  
+  if (!mobileno || !/^\+[1-9]\d{1,14}$/.test(mobileno)) {
+    return res.status(400).json({ error: 'Invalid phone number format' });
+  }
+
   // Generate a random 6-digit OTP
   const otp = crypto.randomInt(100000, 999999).toString();
 
@@ -183,7 +188,6 @@ app.post('/api/send-otp', (req, res) => {
   client.messages
     .create({
       body: `Your OTP is ${otp}`,
-      // from: '+1234567890', // your Twilio number
       from: process.env.TWILIO_PHONE_NUMBER, // your Twilio number
       to: mobileno,
     })
