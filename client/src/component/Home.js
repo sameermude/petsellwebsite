@@ -12,24 +12,6 @@ const Home = () => {
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false);
 
-  const handleLoginClick = () => setShowModal(true);
-
-  const handleSendOtp = async () => {
-    const trimmed = mobileNo.trim();
-    const validMobile = /^[6-9]\d{9}$/.test(trimmed);
-    if (validMobile) {
-      const formattedMobile = `+91${trimmed}`;
-      try {
-        await axios.post(process.env.REACT_APP_ADDRESS + '/api/send-otp', { mobileno: formattedMobile });
-        setShowOtpInput(true);
-      } catch (error) {
-        alert('Error sending OTP: ' + (error.response?.data?.error || error.message));
-      }
-    } else {
-      alert('Please enter a valid 10-digit Indian mobile number starting with 6-9');
-    }
-  };
-
   return (
     <>
       <div className="container-fluid">

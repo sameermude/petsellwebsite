@@ -173,44 +173,40 @@ const Dashboard = ({ userId }) => {
                 )}
             </div>
 
-            {/* Pet Types */}
-            <div className="row justify-content-center mb-2">
+            <div className="pet-type-bar d-flex justify-content-between flex-wrap flex-md-nowrap gap-2 mb-3">
                 {petTypes.map((pet) => (
-                    <div key={pet._id} className="col-md-4 mb-3">
-                        <div
-                            className={`d-flex align-items-center p-2 border rounded shadow-sm pet-type-item ${selectedPetTypeId === pet._id ? 'selected' : ''}`}
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => handlePetTypeSelect(pet._id)}
-                        >
-                            <img
-                                src={pet.image}
-                                alt={pet.type}
-                                className="me-3"
-                                style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
-                            />
-                            <div className="fw-semibold fs-5">{pet.type}</div>
-                        </div>
+                    <div
+                        key={pet._id}
+                        className={`d-flex align-items-center flex-grow-1 justify-content-start p-2 border rounded shadow-sm pet-type-item ${selectedPetTypeId === pet._id ? 'selected' : ''}`}
+                        style={{ cursor: 'pointer', minWidth: 0 }}
+                        onClick={() => handlePetTypeSelect(pet._id)}
+                    >
+                        <img
+                            src={pet.image}
+                            alt={pet.type}
+                            className="me-2"
+                            style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
+                        />
+                        <div className="text-truncate fw-semibold fs-6">{pet.type}</div>
                     </div>
                 ))}
             </div>
 
-            {/* Categories */}
-            <div className="row justify-content-center mb-2">
+            <div className="pet-type-bar d-flex justify-content-center flex-wrap gap-2 mb-3">
                 {categories.map((cat) => (
-                    <div key={cat._id} className="col-sm-6 col-md-4 col-lg-3 mb-3">
+                    <div
+                        key={cat._id}
+                        className={`d-flex align-items-center justify-content-start p-2 border rounded shadow-sm pet-type-item w-auto ${selectedCategoryId === cat._id ? 'selected' : ''}`}
+                        style={{ cursor: 'pointer', minWidth: 0 }}
+                        onClick={() => handleCategorySelect(cat._id)}
+                    >
                         <div
-                            className={`d-flex align-items-center p-2 border rounded shadow-sm category-card ${selectedCategoryId === cat._id ? 'selected' : ''}`}
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => handleCategorySelect(cat._id)}
+                            className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                            style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
                         >
-                            <div
-                                className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
-                                style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
-                            >
-                                {cat.categoryname[0]}
-                            </div>
-                            <div className="fw-medium fs-6">{cat.categoryname}</div>
+                            {cat.categoryname[0]}
                         </div>
+                        <div className="text-truncate fw-semibold fs-6">{cat.categoryname}</div>
                     </div>
                 ))}
             </div>
@@ -225,7 +221,7 @@ const Dashboard = ({ userId }) => {
                             <div key={idx} className="col-md-6 col-lg-4">
                                 <div className="card ad-card h-100 d-flex flex-column p-3 position-relative rounded-3">
                                     {adImage && (
-                                        <img  
+                                        <img
                                             src={adImage.startsWith('data:image') ? adImage : process.env.REACT_APP_ADDRESS + `${adImage}`}
                                             alt="Ad Thumbnail"
                                             className="ad-card-thumbnail rounded-3"

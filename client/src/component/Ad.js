@@ -3,7 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import DeleteRecordModal from './DeleteRecordModal';
 import './style.css'; // Custom CSS
-
+import useWindowWidth from './useWindowWidth';
 //Created by Sameer Mude
 function Ads({ userId }) {
   const value = process.env.REACT_APP_ADDRESS;
@@ -24,8 +24,9 @@ function Ads({ userId }) {
   const [editingAd, setEditingAd] = useState(null);
   const [deleteid, setDeleteId] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const fileInputRefs = useRef([]);
+  const width = useWindowWidth();
+  const isMobile = width < 600;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -251,10 +252,12 @@ function Ads({ userId }) {
   };
 
   return (
-    <div className="container mt-4">
-      <div className="bg-primary text-white text-center py-2 rounded mb-4">
-        <strong style={{ fontSize: '1rem' }}>Ads Detail</strong>
-      </div>
+    <div className="container mt-0 mt-sm-0">
+      {
+        isMobile ? '' : (<div className="bg-primary text-white text-center py-2 rounded mb-4">
+          <strong style={{ fontSize: '1rem' }}>Ads Detail</strong>
+        </div>)
+      }
 
       {/* Selects */}
       <div className="row mb-3">

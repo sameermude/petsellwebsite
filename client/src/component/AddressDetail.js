@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DeleteRecordModal from './DeleteRecordModal';
 import Swal from 'sweetalert2';
-
+import useWindowWidth from './useWindowWidth';
 function AddressDetail({ userId }) {
     const [formData, setFormData] = useState({
         address: '',
@@ -20,6 +20,8 @@ function AddressDetail({ userId }) {
     const [formErrors, setFormErrors] = useState({});
     const [companies, setCompanies] = useState([]);
     const [selectedCompany, setSelectedCompany] = useState('');
+    const width = useWindowWidth();
+    const isMobile = width < 600;
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -157,10 +159,11 @@ function AddressDetail({ userId }) {
 
     return (
         <div className="container mt-1">
-            <div className="bg-primary text-white text-center p-2 rounded mb-4">
-                <strong style={{ fontSize: '1rem' }}>Company Detail</strong>
-            </div>
-
+            {
+                isMobile ? '' : (<div className="bg-primary text-white text-center p-2 rounded mb-4">
+                    <strong style={{ fontSize: '1rem' }}>Company Detail</strong>
+                </div>)
+            }
             <div className="row mb-3 align-items-center">
                 <label className="col-sm-2 col-form-label">Company Name</label>
                 <div className="col-sm-10">

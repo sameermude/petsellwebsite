@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Tree from './Tree';
-import Aboutus from './Aboutus';
 import Company from './Company';
 import AddressDetail from './AddressDetail';
 import Dashboard from './Dashboard';
 import Ad from './Ad';
-import './style.css'; // Custom CSS
+import './style.css';
 import { useAuth } from './AuthContext';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';  // <-- add this
+import { useNavigate } from 'react-router-dom';
+import useWindowWidth from './useWindowWidth';
+
 const treeData = [
   {
     id: 1,
@@ -18,7 +19,7 @@ const treeData = [
       { id: 9, name: 'Company' },
       { id: 4, name: 'Address' },
       { id: 6, name: 'Advertisement' },
-      { id: 6, name: 'Dashboard' },
+      { id: 7, name: 'Dashboard' },
     ],
   },
 ];
@@ -27,18 +28,20 @@ const Admin = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [userId, setUserId] = useState(null);
   const { mobileNo, logout } = useAuth();
-  // Fetch the userId from the backend
-  const navigate = useNavigate();  // <-- add this inside your Admin component
+  const navigate = useNavigate();
+  const width = useWindowWidth();
+  const isMobile = width <= 600;
 
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdatatoken/${mobileNo}/User`, {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await axios.get(
+          process.env.REACT_APP_ADDRESS + `/api/getdatatoken/${mobileNo}/User`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
           }
-        });
+        );
 
         if (response.data && response.data._id) {
           setUserId(response.data._id);
@@ -48,13 +51,13 @@ const Admin = () => {
       } catch (error) {
         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
           localStorage.removeItem('token');
-          logout()
+          logout();
           Swal.fire({
             icon: 'error',
             title: 'Authentication Failed',
             text: 'Your session has expired or is invalid. Please log in again.',
           }).then(() => {
-            navigate('/'); // Redirect to home
+            navigate('/');
           });
         } else {
           console.error("Error fetching user ID:", error);
@@ -65,29 +68,34 @@ const Admin = () => {
     fetchUserId();
   }, []);
 
-
-  useEffect(() => {
-    if (userId) {
-      console.log('User ID updated:', userId);
-    }
-  }, [userId]);
-
   const handleNodeSelect = (node) => {
     setSelectedNode(node);
   };
+
+  const renderMobileNav = () => (
+    <div className="mobile-nav">
+      {['Company', 'Address', 'Advertisement', 'Dashboard'].map((name) => (
+        <button
+          key={name}
+          className={`nav-btn ${selectedNode?.name === name ? 'active' : ''}`}
+          onClick={() => handleNodeSelect({ name })}
+        >
+          {name}
+        </button>
+      ))}
+    </div>
+  );
 
   const renderPanelContent = () => {
     switch (selectedNode?.name) {
       case 'Company':
         return <Company userId={userId} />;
-      case 'About us':
-        return <Aboutus userId={userId} />;
       case 'Address':
         return <AddressDetail userId={userId} />;
       case 'Advertisement':
         return <Ad userId={userId} />;
       case 'Dashboard':
-        return <Dashboard userId={userId}/>;
+        return <Dashboard userId={userId} />;
       default:
         return <div className="placeholder-text">Please select a section from the left.</div>;
     }
@@ -95,16 +103,14 @@ const Admin = () => {
 
   return (
     <div className="admin-container">
-      <div className="top-banner">
-        <h2>Admin Dashboard</h2>
-      </div>
-
       <div className="admin-content">
-        <div className="left-panel">
-          <Tree data={treeData} onSelect={handleNodeSelect} />
-        </div>
+        {isMobile ? renderMobileNav() : (
+          <div className="left-panel">
+            <Tree data={treeData} onSelect={handleNodeSelect} />
+          </div>
+        )}
 
-        <div className="separator1" />
+        {!isMobile && <div className="separator1" />}
 
         <div className="right-panel">
           {renderPanelContent()}

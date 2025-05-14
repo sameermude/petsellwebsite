@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import useWindowWidth from './useWindowWidth';
 //created by sameer mude code
 function Company({ userId }) {
     const stylesPara1 = { color: 'red', display: 'flex', alignItems: 'center' };
@@ -23,6 +24,8 @@ function Company({ userId }) {
     const [editingContactIndex, setEditingContactIndex] = useState(null);
     const [companyList, setCompanyList] = useState([]);
     const companyNameRef = useRef(null);
+    const width = useWindowWidth();
+    const isMobile = width < 600;
 
     const fetchCompanyList = async () => {
         try {
@@ -126,18 +129,18 @@ function Company({ userId }) {
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel'
         });
-    
+
         if (confirm.isConfirmed) {
             try {
                 await axios.delete(process.env.REACT_APP_ADDRESS + `/api/delete/${formData._id}/Company`);
                 Swal.fire('Deleted!', 'The entry has been deleted.', 'success');
-    
+
                 const res = await axios.get(process.env.REACT_APP_ADDRESS + `/api/getdata/-1/Company`);
                 const fullList = Array.isArray(res.data) ? res.data : [];
                 setAboutList(fullList);
                 setFilteredList(fullList);
                 fetchCompanyList();
-    
+
                 // 🔥 Reset the whole formData, not just _id
                 setFormData({
                     companyname: '',
@@ -147,7 +150,7 @@ function Company({ userId }) {
                     contacts: [],
                     userId: userId
                 });
-    
+
                 Clearform(); // Clears email/contact inputs and validation
             } catch (error) {
                 if (error.response && error.response.status === 400 && error.response.data.message) {
@@ -158,7 +161,7 @@ function Company({ userId }) {
             }
         }
     };
-    
+
 
     const handleAddEmail = () => {
         const trimmed = emailInput.trim();
@@ -229,12 +232,13 @@ function Company({ userId }) {
     };
 
     return (
-        <div className="container mt-2">
-            <div className="bg-primary text-white text-center p-2 rounded mb-4">
-                <strong style={{ fontSize: '1rem' }}>Company Detail</strong>
-            </div>
-
-            <div className="row mb-4 align-items-center">
+        <div className="container mt-1 mt-sm-0">
+            {
+                isMobile ? '' : (<div className="bg-primary text-white text-center p-2 rounded mb-4">
+                    <strong style={{ fontSize: '1rem' }}>Company Detail</strong>
+                </div>)
+            }
+            <div className="row mb-3 mt-sm-0 align-items-center">
                 <label className="col-sm-2 col-form-label">Company Name</label>
                 <div className="col-sm-10">
                     <input
