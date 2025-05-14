@@ -151,3 +151,32 @@
 .dashboard .form-select option {
     color: black !important;
 }
+
+/* Ensure the card has a smaller appearance on mobile */
+@media (max-width: 600px) {
+  .ad-card {
+    padding: 1rem; /* Reduce padding */
+    font-size: 0.875rem; /* Slightly smaller font */
+  }
+
+  .ad-card-thumbnail {
+    max-height: 120px; /* Limit image size on small screens */
+    object-fit: cover;
+  }
+
+  .ad-card h5 {
+    font-size: 1rem; /* Smaller title on mobile */
+    margin-bottom: 0.5rem;
+  }
+
+  .ad-card p {
+    font-size: 0.875rem; /* Smaller description */
+    margin-bottom: 0.5rem;
+  }
+
+  .ad-card .view-ad-btn {
+    font-size: 0.875rem; /* Smaller button text */
+    padding: 0.5rem;
+  }
+}
+

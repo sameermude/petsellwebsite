@@ -218,7 +218,7 @@ const Dashboard = ({ userId }) => {
                         const adImage = ad.images && ad.images[0] ? ad.images[0] : null;
 
                         return (
-                            <div key={idx} className="col-md-6 col-lg-4">
+                            <div key={idx} className="col-12 col-md-6 col-lg-4">
                                 <div className="card ad-card h-100 d-flex flex-column p-3 position-relative rounded-3">
                                     {adImage && (
                                         <img
@@ -257,6 +257,7 @@ const Dashboard = ({ userId }) => {
                     )
                 )}
             </div>
+
 
             {/* Ad Modal */}
             {selectedAd && (

@@ -342,7 +342,7 @@ function Ads({ userId }) {
                 {/* Image Preview */}
                 {image && (
                   <img
-                    src={image.startsWith('data:image') ? image : `http://localhost:5000${image}`}
+                    src={image.startsWith('data:image') ? image : `${process.env.REACT_APP_ADDRESS}${image}`}
                     alt={`Preview ${index}`}
                     className="img-thumbnail rounded shadow-sm"
                     style={{
