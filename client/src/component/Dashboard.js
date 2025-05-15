@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 import './Dashboard.css';
+import { FaStop, FaMicrophone } from 'react-icons/fa';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const Dashboard = ({ userId }) => {
     const [categories, setCategories] = useState([]);
@@ -15,6 +17,28 @@ const Dashboard = ({ userId }) => {
     const [selectedAd, setSelectedAd] = useState(null);
     const [searchText, setSearchText] = useState('');
     const [searchHistory, setSearchHistory] = useState([]);
+    const {
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition
+    } = useSpeechRecognition();
+    const [isVoiceInput, setIsVoiceInput] = useState(false);
+
+    useEffect(() => {
+        if (!browserSupportsSpeechRecognition) {
+            alert('Browser does not support speech recognition.');
+            return;
+        }
+
+        if (!listening && transcript) {
+            setIsVoiceInput(true);
+            resetTranscript();
+            // Trigger the search function
+            handleSearch(transcript);
+            setSearchText(transcript);
+        }
+    }, [listening, transcript]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -91,23 +115,25 @@ const Dashboard = ({ userId }) => {
         }
     };
 
-    const handleSearch = () => {
-        if (!searchText.trim()) {
+    const handleSearch = (query) => {
+        const searchQuery = query || searchText;
+        if (!searchQuery.trim()) {
             setFilteredAds(ads);
             return;
         }
 
-        const updatedHistory = [searchText, ...searchHistory.filter(q => q !== searchText)].slice(0, 10);
+        const updatedHistory = [searchQuery, ...searchHistory.filter(q => q !== searchQuery)].slice(0, 10);
         setSearchHistory(updatedHistory);
         localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
 
         const filtered = ads.filter(ad =>
-            ad.adtitle.toLowerCase().includes(searchText.toLowerCase()) ||
-            ad.addescription.toLowerCase().includes(searchText.toLowerCase())
+            ad.adtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            ad.addescription.toLowerCase().includes(searchQuery.toLowerCase())
         );
         setFilteredAds(filtered);
         setSearchText('');
     };
+
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') handleSearch();
@@ -132,30 +158,52 @@ const Dashboard = ({ userId }) => {
         <div className="dashboard container py-4">
             {/* Search Box */}
             <div className="mb-4 position-relative">
-                <div className="d-flex align-items-center gap-3">
+                <div className="d-flex align-items-center gap-2">
                     <input
                         type="text"
-                        className="form-control"
-                        placeholder="Search ads..."
+                        name="search"
                         value={searchText}
-                        onChange={(e) => setSearchText(e.target.value)}
+                        onChange={(e) => {
+                            setIsVoiceInput(false);
+                            setSearchText(e.target.value);
+                        }}
                         onKeyPress={handleKeyPress}
-                        style={{ width: '85%' }}
+                        placeholder="Search..."
+                        autoComplete="off"
+                        spellCheck="false"
+                        // optionally add this to disable password managers or other autofill
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        style={{ flex: '1 1 250px', minWidth: '200px' }}
                     />
-                    <div className="form-check m-0 d-flex align-items-center">
-                        <input
-                            type="checkbox"
-                            className="form-check-input me-2"
-                            id="customCheck1"
-                            checked={isChecked}
-                            onChange={handleCheckboxChange}
-                        />
-                        <label className="form-check-label mb-0" htmlFor="customCheck1">
-                            Show Your Ads
-                        </label>
-                    </div>
+
+                    <button
+                        style={{ border: 'none' }}
+                        onClick={() => {
+                            if (listening) {
+                                SpeechRecognition.stopListening();
+                            } else {
+                                resetTranscript();
+                                SpeechRecognition.startListening({ continuous: false });
+                            }
+                        }}
+                        className="btn btn-secondary"
+                    >
+                        {listening ? <FaStop /> : <FaMicrophone />}
+                    </button>
+
+                    <input
+                        type="checkbox"
+                        className="form-check-input me-2"
+                        id="customCheck1"
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                    />
+                    <label className="form-check-label mb-0" htmlFor="customCheck1">
+                        Show Your Ads
+                    </label>
                 </div>
-                {searchText && searchHistory.length > 0 && (
+                {searchText && !isVoiceInput && searchHistory.length > 0 && (
                     <ul className="list-group position-absolute w-100" style={{ zIndex: 1000 }}>
                         {searchHistory
                             .filter(q => q.toLowerCase().includes(searchText.toLowerCase()))
@@ -218,7 +266,7 @@ const Dashboard = ({ userId }) => {
                         const adImage = ad.images && ad.images[0] ? ad.images[0] : null;
 
                         return (
-                            <div key={idx} className="col-12 col-md-6 col-lg-4">
+                            <div key={idx} className="col-md-6 col-lg-4">
                                 <div className="card ad-card h-100 d-flex flex-column p-3 position-relative rounded-3">
                                     {adImage && (
                                         <img
@@ -257,7 +305,6 @@ const Dashboard = ({ userId }) => {
                     )
                 )}
             </div>
-
 
             {/* Ad Modal */}
             {selectedAd && (
