@@ -13,6 +13,18 @@
     color: #ffffff;
 }
 
+.custom-modal.fade .modal-dialog {
+  transform: translateY(100px);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.custom-modal.show .modal-dialog {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+
 .view-ad-btn {
     color: #ffffff; /* Text color */
     background-color: #5dade2; /* Normal background color */

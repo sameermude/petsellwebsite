@@ -316,7 +316,7 @@ app.get('/api/adselected', async (req, res) => {
     })
       .populate('categoryid') // Populate category details
       .populate('pettypeid') // Populate pettype details
-      .populate('companyId', 'companyname') // Populate companyId to get companyName (assuming you want only companyName field)
+      .populate('companyId') // Populate companyId to get companyName (assuming you want only companyName field)
       .populate('addressid') // Populate address details
       .exec();
 

@@ -17,6 +17,7 @@ const Dashboard = ({ userId }) => {
     const [selectedAd, setSelectedAd] = useState(null);
     const [searchText, setSearchText] = useState('');
     const [searchHistory, setSearchHistory] = useState([]);
+    const [showSellerForm, setshowSellerForm] = useState(false);
     const {
         transcript,
         listening,
@@ -134,7 +135,6 @@ const Dashboard = ({ userId }) => {
         setSearchText('');
     };
 
-
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') handleSearch();
     };
@@ -153,6 +153,20 @@ const Dashboard = ({ userId }) => {
         setShowModal(false);
         setSelectedAd(null);
     };
+
+    const handleCloseModalSeller = () => {
+        setshowSellerForm(false);
+        setSelectedAd(null);
+    };
+
+    const handleCloseModalShowSeller = () => {
+        setShowModal(false);
+    };
+
+    const contactSeller = () => {
+        handleCloseModalShowSeller();
+        setshowSellerForm(true);
+    }
 
     return (
         <div className="dashboard container py-4">
@@ -176,7 +190,6 @@ const Dashboard = ({ userId }) => {
                         autoCapitalize="off"
                         style={{ flex: '1 1 250px', minWidth: '200px' }}
                     />
-
                     <button
                         style={{ border: 'none' }}
                         onClick={() => {
@@ -258,13 +271,11 @@ const Dashboard = ({ userId }) => {
                     </div>
                 ))}
             </div>
-
             {/* Ads */}
             <div className="row g-3">
                 {filteredAds.length > 0 ? (
                     filteredAds.map((ad, idx) => {
                         const adImage = ad.images && ad.images[0] ? ad.images[0] : null;
-
                         return (
                             <div key={idx} className="col-md-6 col-lg-4">
                                 <div className="card ad-card h-100 d-flex flex-column p-3 position-relative rounded-3">
@@ -315,7 +326,7 @@ const Dashboard = ({ userId }) => {
                     <Modal.Body>
                         <h6>{selectedAd.addescription}</h6>
                         <p><strong>Company:</strong> {selectedAd.companyId?.companyname || 'N/A'}</p>
-                        <p><strong>Address:</strong> {selectedAd.addressid?.addresstype || 'N/A'}</p>
+                        <p><strong>Address:</strong> {selectedAd.addressid?.address || 'N/A'}</p>
                         {selectedAd.images && selectedAd.images.length > 0 && (
                             <div className="ad-images d-flex flex-wrap gap-2">
                                 {selectedAd.images.map((image, idx) => (
@@ -331,10 +342,48 @@ const Dashboard = ({ userId }) => {
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                        <Button variant="primary">Contact Seller</Button>
+                        <Button variant="primary" onClick={contactSeller}>Contact Seller</Button>
                     </Modal.Footer>
                 </Modal>
             )}
+            {/*Seller Form*/}
+            {
+                showSellerForm && selectedAd && (
+                    <Modal show={showSellerForm} onHide={handleCloseModalSeller} dialogClassName="custom-modal"
+                        animation={true}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>{selectedAd.companyId?.companyname}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p><strong>Address :</strong> {selectedAd.addressid?.addresstype}</p>
+                            <p><strong>Address Type :</strong> {selectedAd.addressid?.address}</p>
+                            <p>
+                                <strong>Email :</strong>{' '}
+                                {selectedAd.companyId?.emails?.map((email, index) => (
+                                    <span key={index}>
+                                        {email}{index < selectedAd.companyId.emails.length - 1 ? ', ' : ''}
+                                    </span>
+                                ))}
+                            </p>
+                            <p>
+                                <strong>Tel No :</strong>{' '}
+                                {selectedAd.companyId?.contacts?.map((contacts
+                                ) => (
+                                    <span>
+                                        {contacts}
+                                    </span>
+                                ))}
+                            </p>
+
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleCloseModalSeller}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                )
+            }
         </div>
     );
 };
