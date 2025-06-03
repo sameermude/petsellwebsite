@@ -1,6 +1,7 @@
 // server.js
 const express = require('express');
 const mongoose = require('mongoose');
+const axios = require('axios');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
@@ -60,6 +61,17 @@ db.once('open', () => {
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
+
+const CLARIFAI_API_KEY = process.env.REACT_APP_CLARIFAI_API_KEY;
+const MODEL_ID1 = process.env.REACT_APP_MODEL_ID1;
+
+const LOGO_MODEL_ID = process.env.REACT_APP_LOGO_MODEL_ID;
+const TEXT_RECOGNITION_MODEL_ID = process.env.REACT_APP_TEXT_RECOGNITION_MODEL_ID;
+
+/* const CLARIFAI_API_KEY = '70861cf7d9184e7d94a39e70306f7c78';
+const MODEL_ID1 = 'aaa03c23b3724a16a56b629203edc62c';
+const LOGO_MODEL_ID = "c443119bf2ed4da98487520d01a0b1e3";
+const TEXT_RECOGNITION_MODEL_ID = 'ocr-scene-english-paddleocr'; */
 
 // In-memory store for OTP (you can use a database or Redis for production)
 const otpStore = {};
@@ -167,6 +179,132 @@ const generateToken = (user) => {
     res.status(400).json({ error: 'Invalid OTP' });
   }
 }); */
+
+app.post('/analyze-logo', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    console.log('Model Id1' + CLARIFAI_API_KEY);
+    console.log('Api Id' + MODEL_ID1);
+    console.log('Logo Id' + LOGO_MODEL_ID);
+    console.log('Text recog Id' + TEXT_RECOGNITION_MODEL_ID);
+    // Read the saved file from disk
+    const filePath = path.join(__dirname, req.file.path); // absolute path to uploaded file
+    const fileData = fs.readFileSync(filePath);
+    const base64Image = fileData.toString('base64');
+    console.log('here reach1');
+    // Then call Clarifai API with base64Image as before...
+    const response = await axios.post(
+      `https://api.clarifai.com/v2/models/${LOGO_MODEL_ID}/outputs`,
+      {
+        inputs: [
+          {
+            data: {
+              image: { base64: base64Image },
+            },
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Key ${CLARIFAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log(response.data);
+    res.json(response.data);
+
+    // Optionally delete the uploaded file after processing to save space
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res.status(500).json({ error: 'Clarifai API error' });
+  }
+});
+
+app.post('/analyze', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    console.log('here reach');
+    // Read the saved file from disk
+    const filePath = path.join(__dirname, req.file.path); // absolute path to uploaded file
+    const fileData = fs.readFileSync(filePath);
+    const base64Image = fileData.toString('base64');
+    // Then call Clarifai API with base64Image as before...
+    console.log('Here val' + MODEL_ID1);
+    const response = await axios.post(
+      `https://api.clarifai.com/v2/models/${MODEL_ID1}/outputs`,
+      {
+        inputs: [
+          {
+            data: {
+              image: { base64: base64Image },
+            },
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Key ${CLARIFAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log(response.data);
+    res.json(response.data);
+
+    // Optionally delete the uploaded file after processing to save space
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res.status(500).json({ error: 'Clarifai API error' });
+  }
+});
+
+app.post('/analyze-Text', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    console.log('here reach1112');
+    // Read the saved file from disk
+    const filePath = path.join(__dirname, req.file.path); // absolute path to uploaded file
+    const fileData = fs.readFileSync(filePath);
+    const base64Image = fileData.toString('base64');
+    console.log('here reach1');
+    // Then call Clarifai API with base64Image as before...
+    const response = await axios.post(
+      `https://api.clarifai.com/v2/models/${TEXT_RECOGNITION_MODEL_ID}/outputs`,
+      {
+        inputs: [
+          {
+            data: {
+              image: { base64: base64Image },
+            },
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Key ${CLARIFAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log(response.data);
+    res.json(response.data);
+
+    // Optionally delete the uploaded file after processing to save space
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res.status(500).json({ error: 'Clarifai API error' });
+  }
+});
 
 app.post('/api/verify-otp', async (req, res) => {
   const { mobileno, otp } = req.body;
@@ -568,7 +706,7 @@ app.put('/api/adclose/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { adclose } = req.body; // expect { adclose: true } or false
-    
+
     const updatedAd = await Ad.findByIdAndUpdate(
       id,
       { adclose },

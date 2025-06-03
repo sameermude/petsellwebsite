@@ -10,6 +10,7 @@ import { useAuth } from './AuthContext';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import useWindowWidth from './useWindowWidth';
+import Analyzer from './Analyzar';
 
 const treeData = [
   {
@@ -74,7 +75,7 @@ const Admin = () => {
 
   const renderMobileNav = () => (
     <div className="mobile-nav">
-      {['Company', 'Address', 'Advertisement', 'Dashboard'].map((name) => (
+      {['Company', 'Address', 'Advertisement', 'Dashboard', 'Lens'].map((name) => (
         <button
           key={name}
           className={`nav-btn ${selectedNode?.name === name ? 'active' : ''}`}

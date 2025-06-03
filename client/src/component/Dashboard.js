@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 import './Dashboard.css';
-import { FaStop, FaMicrophone } from 'react-icons/fa';
+import { FaStop, FaMicrophone, FaEye } from 'react-icons/fa';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+import Analyzer from './Analyzar';
 
 const Dashboard = ({ userId }) => {
     const [categories, setCategories] = useState([]);
@@ -18,6 +21,13 @@ const Dashboard = ({ userId }) => {
     const [searchText, setSearchText] = useState('');
     const [searchHistory, setSearchHistory] = useState([]);
     const [showSellerForm, setshowSellerForm] = useState(false);
+    const [showAnalyzer, setShowAnalyzer] = useState(false);
+    const [analyzedData, setAnalyzedData] = useState([]);
+    const [lastAnalyzerResult, setLastAnalyzerResult] = useState([]);
+    const analyzerRef = useRef();
+    const [disableClose, setDisableClose] = useState(false);
+    const tooltipRef = useRef(null);
+
     const {
         transcript,
         listening,
@@ -168,6 +178,54 @@ const Dashboard = ({ userId }) => {
         setshowSellerForm(true);
     }
 
+    const handleOpenAnalyzer = () => {
+        if (tooltipRef.current) {
+            tooltipRef.current.hide?.(); // Bootstrap 5+ safe call
+        }
+        setShowAnalyzer(true);
+    };
+
+    const handleCloseAnalyzer1 = (dataFromChild) => {
+        setShowAnalyzer(false);
+        if (dataFromChild && dataFromChild.length > 0) {
+            setAnalyzedData(dataFromChild);
+            console.log('Data from Analyzer:', dataFromChild);
+        }
+    };
+
+    const handleCloseAnalyzer = (dataFromChild) => {
+        setLastAnalyzerResult(dataFromChild);
+        setShowAnalyzer(false);
+        console.log("Returned Data:", dataFromChild); // You can use this data
+        if (dataFromChild && dataFromChild.length > 0) {
+            setAnalyzedData(dataFromChild);
+            const filtered = ads.filter(ad =>
+                dataFromChild.some(text =>
+                    ad.adtitle.toLowerCase().includes(text.toLowerCase())
+                )
+            );
+            setFilteredAds(filtered);
+            console.log('Data from Analyzer:', dataFromChild);
+        }
+    };
+
+    const handleModalClose = () => {
+        if (analyzerRef.current?.closeWithResult) {
+            const result = analyzerRef.current.closeWithResult();
+            setLastAnalyzerResult(result);
+            handleCloseAnalyzer(result);
+            const filtered = ads.filter(ad =>
+                result.some(text =>
+                    ad.adtitle.toLowerCase().includes(text.toLowerCase())
+                )
+            );
+            setFilteredAds(filtered);
+
+        } else {
+            handleCloseAnalyzer(null);
+        }
+    };
+
     return (
         <div className="dashboard container py-4">
             {/* Search Box */}
@@ -204,6 +262,67 @@ const Dashboard = ({ userId }) => {
                     >
                         {listening ? <FaStop /> : <FaMicrophone />}
                     </button>
+
+                    <OverlayTrigger
+                        placement="top"
+                        trigger={['hover']}
+                        overlay={<Tooltip id="tooltip-image-search" ref={tooltipRef}>Image Search</Tooltip>}
+                    >
+                        <button className="btn btn-secondary" style={{ border: 'none' }} onClick={handleOpenAnalyzer}  // send data back and close
+                        >
+                            <FaEye />
+                        </button>
+                    </OverlayTrigger>
+
+                    <Modal
+                        show={showAnalyzer}
+                        onHide={handleModalClose}
+                        centered
+                        dialogClassName="custom-analyzer-modal"
+                    >
+                        <Modal.Header>
+                            <Modal.Title>Image Analyzer</Modal.Title>
+                            <button
+                                className="btn-close"
+                                onClick={handleModalClose}
+                                disabled={disableClose}
+                                style={{ marginLeft: 'auto' }}
+                                aria-label="Close"
+                            />
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Analyzer
+                                ref={analyzerRef}
+                                onClose={(result) => {
+                                    setLastAnalyzerResult(result);
+                                    handleCloseAnalyzer(result);
+                                }}
+                                setDisableClose={setDisableClose}
+                            />
+                        </Modal.Body>
+                    </Modal>
+
+                    {/*    {analyzedData.length > 0 && (
+                        <div className="mt-3">
+                            <h5>Analyzed Results:</h5>
+                            <ul>
+                                {analyzedData.map((name, idx) => (
+                                    <li key={idx}>{name}</li>
+                                ))}
+                            </
+                        </div>
+                    )} */}
+
+                    {analyzedData.length > 0 && (
+                        <div className="mt-3">
+                            <h5>Analyzed Results:</h5>
+                            <ul>
+                                {analyzedData.map((name, idx) => (
+                                    <li key={idx}>{name}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
                     <input
                         type="checkbox"

@@ -13,6 +13,11 @@
     color: #ffffff;
 }
 
+.custom-analyzer-modal {
+  max-width: 500px; /* Adjust as needed */
+  width: 40%;        /* Optional: responsive sizing */
+}
+
 .custom-modal.fade .modal-dialog {
   transform: translateY(100px);
   opacity: 0;
