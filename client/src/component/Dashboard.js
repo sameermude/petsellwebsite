@@ -313,17 +313,6 @@ const Dashboard = ({ userId }) => {
                         </div>
                     )} */}
 
-                    {analyzedData.length > 0 && (
-                        <div className="mt-3">
-                            <h5>Analyzed Results:</h5>
-                            <ul>
-                                {analyzedData.map((name, idx) => (
-                                    <li key={idx}>{name}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-
                     <input
                         type="checkbox"
                         className="form-check-input me-2"
